@@ -1,7 +1,7 @@
 #include "Image.h"
 #include <Windows.h>
-
-Image::Image(int screenWidth, int screenHeight, int stepX, int stepY, string imgPath) {
+#include "Mode.h"
+Image::Image(int screenWidth, int screenHeight, int stepX, int stepY, string imgPath){
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
 	this->stepX = stepX;

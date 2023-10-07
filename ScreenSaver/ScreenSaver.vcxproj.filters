@@ -30,11 +30,9 @@
     <ClCompile Include="Image.cpp">
       <Filter>Source Files\Modes</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Image.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClCompile Include="Mode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mouse.h">
@@ -46,5 +44,13 @@
     <ClInclude Include="Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\dvd-image.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

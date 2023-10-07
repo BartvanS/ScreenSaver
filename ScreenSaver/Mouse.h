@@ -1,14 +1,9 @@
 #pragma once
 #include <windows.h>
-
-class Mouse
+#include "Mode.h"
+class Mouse : public Mode
 {
 private:
-	int screenWidth;
-	int screenHeight;
-	int stepX;
-	int stepY;
-	//char* imPath;
 	POINT GetMousePosition();
 
 public:

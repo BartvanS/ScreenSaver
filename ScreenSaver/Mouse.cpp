@@ -4,7 +4,8 @@
 using namespace cv;
 using namespace std;
 
-Mouse::Mouse(int screenWidth, int screenHeight, int stepX, int stepY) {
+Mouse::Mouse(int screenWidth, int screenHeight, int stepX, int stepY)
+{
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
 	this->stepX = stepX;

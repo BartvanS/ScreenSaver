@@ -18,7 +18,7 @@ int main()
 	int screenHeight;
 	GetScreenDimension(&screenWidth, &screenHeight);
 	Mouse mouse(screenWidth, screenHeight, 1, 1);
-	Image image(screenWidth, screenHeight, 1, 1, "C:\\Users\\bartv\\source\\repos\\ScreenSaver\\ScreenSaver\\dvd-logo.jpeg");
+	Image image(screenWidth, screenHeight, 1, 1, "./dvd-image.png");
 	while (true)
 	{
 		// When escape key is pressed, escape while loop
