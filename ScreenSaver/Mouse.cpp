@@ -1,7 +1,5 @@
 #include "Mouse.h"
 #include <windows.h>
-#include <opencv2\opencv.hpp>
-using namespace cv;
 using namespace std;
 
 Mouse::Mouse(int screenWidth, int screenHeight, int stepX, int stepY)

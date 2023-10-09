@@ -1,15 +1,14 @@
 #pragma once
-#include <opencv2\opencv.hpp>
 #include "Mode.h"
 #include <Windows.h>
-using namespace cv;
+#include <string>
 using namespace std;
 class Image : public Mode
 {
 private:
 
 	POINT Point;
-	Mat image;
+	string imgPath;
 	void SetupImage();
 public:
 	Image(int screenWidth, int screenHeight, int stepX, int stepY, string imgPath);
