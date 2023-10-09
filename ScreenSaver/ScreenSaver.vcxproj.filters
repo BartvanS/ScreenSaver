@@ -33,7 +33,7 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files\Modes</Filter>
     </ClCompile>
-    <ClCompile Include="WindowsHandler.cpp">
+    <ClCompile Include="KeyboardHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="Mode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsHandler.h">
+    <ClInclude Include="KeyboardHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

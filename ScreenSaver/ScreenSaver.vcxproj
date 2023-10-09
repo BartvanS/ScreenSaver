@@ -143,7 +143,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
@@ -176,7 +176,7 @@
       <AdditionalIncludeDirectories>C:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -201,18 +201,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="KeyboardHook.cpp" />
     <ClCompile Include="Mode.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenSaver.cpp" />
-    <ClCompile Include="WindowsHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image.h" />
+    <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="Mode.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Screen.h" />
-    <ClInclude Include="WindowsHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\dvd-image.png" />
