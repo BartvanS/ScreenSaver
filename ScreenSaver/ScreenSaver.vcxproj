@@ -212,10 +212,14 @@
     <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="Mode.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Screen.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\dvd-image.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
