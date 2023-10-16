@@ -8,6 +8,8 @@
 #include "KeyboardHook.h"
 using namespace std;
 // Keyboard hook
+HHOOK KeyboardHook::g_hHook = NULL;
+bool KeyboardHook::g_bExitLoop = false; 
 KeyboardHook hook;
 
 int screenWidth;
@@ -39,8 +41,7 @@ int StartProcess() {
     return 0;
 }
 
-HHOOK KeyboardHook::g_hHook = NULL;
-bool KeyboardHook::g_bExitLoop = false;
+
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
 {
