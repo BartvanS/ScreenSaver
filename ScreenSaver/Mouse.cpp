@@ -2,12 +2,21 @@
 #include <windows.h>
 using namespace std;
 
+Mouse::Mouse() {
+
+}
+
 Mouse::Mouse(int screenWidth, int screenHeight, int stepX, int stepY)
 {
+	this->Init(screenWidth, screenHeight, stepX, stepY);
+}
+
+int Mouse::Init(int screenWidth, int screenHeight, int stepX, int stepY) {
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
 	this->stepX = stepX;
 	this->stepY = stepY;
+	return 1;
 }
 
 POINT Mouse::GetMousePosition() {

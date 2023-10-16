@@ -215,7 +215,7 @@
     <ClInclude Include="Screen.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\dvd-image.png" />
+    <Image Include="..\..\..\..\Downloads\dvd-image.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
