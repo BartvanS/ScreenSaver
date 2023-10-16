@@ -19,13 +19,7 @@ void Setup() {
     //Image image(screenWidth, screenHeight, 1, 1, "./dvd-image.png");
 }
 
-
-HHOOK KeyboardHook::g_hHook = NULL;
-bool KeyboardHook::g_bExitLoop = false;
-// WinMain instead of main to run the program as windows application instead of console application
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
-{
-    Setup();
+int StartProcess() {
     // Move the screensaver untill the key is pressed and IsExitLoop has been triggered
     if (hook.StartHook()) {
         while (hook.IsExitLoop() == false) {
@@ -40,11 +34,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         hook.StopHook();
         return 1;
     }
-    
+
     hook.StopHook();
-
     return 0;
+}
 
+HHOOK KeyboardHook::g_hHook = NULL;
+bool KeyboardHook::g_bExitLoop = false;
+// WinMain instead of main to run the program as windows application instead of console application
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
+{
+    Setup();
+
+    // Start the processes. When stopped it returns the exit code
+    return StartProcess();
 }
  
 
