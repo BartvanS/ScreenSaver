@@ -55,36 +55,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		hdcMem = CreateCompatibleDC(NULL);
 		SelectObject(hdcMem, hBitmap);
 		break;
-	//case WM_SIZE:
-	//{
-	//	int width = LOWORD(lParam);  // Macro to get the low-order word.
-	//	int height = HIWORD(lParam); // Macro to get the high-order word.
-
-	//	// Respond to the message:
-	//	PAINTSTRUCT ps;
-	//	HDC hdc = BeginPaint(hwnd, &ps);
-
-	//	// All painting occurs here, between BeginPaint and EndPaint.
-	//	HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
-	//	FillRect(hdc, &ps.rcPaint, brush);
-
-	//	EndPaint(hwnd, &ps);
-	//	break;
-	//}
-	case WM_PAINT: {
-		// get bitmap image size
-		BITMAP bm;
-		GetObject(hBitmap, sizeof(BITMAP), &bm);
-
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hwnd, &ps);
-		BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
-		EndPaint(hwnd, &ps);
+	/*case WM_PAINT: {
+	
 		return 0;
-	}
+	}*/
 	case WM_CLOSE:
-		if (MessageBox(hwnd, L"Really quit?", L"My application", MB_OKCANCEL) == IDOK)
-		{
+		//if (MessageBox(hwnd, L"Really quit?", L"My application", MB_OKCANCEL) == IDOK)
+		if (true) {
 			DestroyWindow(hwnd);
 			DeleteDC(hdcMem);
 			DeleteObject(hBitmap);
@@ -98,8 +75,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	case WM_QUIT: {
 		//do nothing
 	}
+	default:
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 
@@ -121,15 +99,14 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	BITMAP bm;
 	GetObject(hBitmap, sizeof(BITMAP), &bm);
 
-
 	HWND hwnd = CreateWindowEx(
 		0,                              // Optional window styles.
 		CLASS_NAME,                     // Window class
 		L"Learn to Program Windows",    // Window text
-		WS_OVERLAPPEDWINDOW,            // Window style
+		WS_POPUP,            // Window style
 
 		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, bm.bmWidth, bm.bmHeight,
+		0, 0, screenWidth, screenHeight,
 
 		NULL,       // Parent window    
 		NULL,       // Menu
@@ -143,6 +120,21 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	}
 	ShowWindow(hwnd, nCmdShow);
 
+
+
+
+	// Make screen black
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(hwnd, &ps);
+
+	// All painting occurs here, between BeginPaint and EndPaint.
+	HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
+	FillRect(hdc, &ps.rcPaint, brush);
+
+	// Paint bitmap
+	BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
+	EndPaint(hwnd, &ps);
+
 	MSG msg = { };
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
@@ -155,12 +147,13 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	Setup();
+
 	hBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_BITMAP1));
 
 	int success = Window(hInstance, nCmdShow);
 
-	//Setup();
-	//// Start the processes. When stopped it returns the exit code
+	// Start the processes. When stopped it returns the exit code
 	//return StartProcess();
 }
 
