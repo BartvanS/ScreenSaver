@@ -206,6 +206,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenSaver.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\dvd-image.bmp" />

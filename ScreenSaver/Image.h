@@ -2,16 +2,20 @@
 #include "Mode.h"
 #include <Windows.h>
 #include <string>
+
+
 using namespace std;
 class Image : public Mode
 {
 private:
-
+	HBITMAP hBitmap = NULL;
+	HDC hdcMem = NULL;
+	HINSTANCE phInstance;
 	POINT Point;
-	string imgPath;
-	void SetupImage();
+	int SetupImage(int nCmdShow);
 public:
-	Image(int screenWidth, int screenHeight, int stepX, int stepY, string imgPath);
-	void Next();
+	void Init(int screenWidth, int screenHeight, int stepX, int stepY, HINSTANCE phInstance, int nCmdShow);
+	~Image();
+	POINT NextPoint();
 };
 
