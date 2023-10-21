@@ -49,31 +49,14 @@ void Setup(HINSTANCE* hinstance) {
 	image.Init(screenWidth, screenHeight, 1, 1, imageStartPoint, bm.bmWidth, bm.bmHeight);
 }
 
-struct StateInfo
-{
-};
-
-inline StateInfo* GetAppState(HWND hwnd)
-{
-	LONG_PTR ptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-	StateInfo* pState = reinterpret_cast<StateInfo*>(ptr);
-	return pState;
+void TearDown() {
+	// Clean up bitmap
+	DeleteDC(hdcMem);
+	DeleteObject(hBitmap);
 }
 
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	StateInfo* pState;
-	if (uMsg == WM_CREATE)
-	{
-		CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
-		pState = reinterpret_cast<StateInfo*>(pCreate->lpCreateParams);
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)pState);
-	}
-	else
-	{
-		pState = GetAppState(hwnd);
-	}
-
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -102,8 +85,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		//if (MessageBox(hwnd, L"Really quit?", L"My application", MB_OKCANCEL) == IDOK)
 		if (true) {
 			DestroyWindow(hwnd);
-			DeleteDC(hdcMem);
-			DeleteObject(hBitmap);
 			PostQuitMessage(0);
 		}
 		// Else: User canceled. Do nothing.
@@ -119,22 +100,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 
 int Window(int nCmdShow) {
+	// Register the window class.
 	const wchar_t CLASS_NAME[] = L"Black background class";
-
 	WNDCLASS wc = { };
-
 	wc.lpfnWndProc = WindowProc;
 	wc.hInstance = *phInstance;
 	wc.lpszClassName = CLASS_NAME;
-
 	RegisterClass(&wc);
 
-	StateInfo* pState = new (std::nothrow) StateInfo;
-
-	if (pState == NULL)
-	{
-		return -1;
-	}
 	// Create and show Window
 	HWND hwnd = CreateWindowEx(
 		0,                              // Optional window styles.
@@ -148,7 +121,7 @@ int Window(int nCmdShow) {
 		NULL,       // Parent window    
 		NULL,       // Menu
 		*phInstance,  // Instance handle
-		pState        // Additional application data
+		NULL // Additional application data
 	);
 
 	if (hwnd == NULL)
@@ -156,7 +129,6 @@ int Window(int nCmdShow) {
 		return 0;
 	}
 	ShowWindow(hwnd, nCmdShow);
-
 
 	// Keep running untill IsExitLoop has been triggered
 	MSG msg = { };
@@ -181,9 +153,8 @@ int Window(int nCmdShow) {
 	else {
 		std::cerr << "Failed to set hook!" << std::endl;
 		hook.StopHook();
-		return 1;
+		return -1;
 	}
-
 	hook.StopHook();
 	return 0;
 }
@@ -192,12 +163,10 @@ int Window(int nCmdShow) {
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	
 	Setup(&hInstance);
-
-
-	return Window( nCmdShow);
-
+	int success =  Window( nCmdShow);
+	TearDown();
+	return success;
 }
 
 
