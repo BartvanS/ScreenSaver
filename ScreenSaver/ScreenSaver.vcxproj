@@ -201,7 +201,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Direction.cpp" />
-    <ClCompile Include="Image.cpp" />
     <ClCompile Include="KeyboardHook.cpp" />
     <ClCompile Include="Mode.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -211,7 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Direction.h" />
-    <ClInclude Include="Image.h" />
     <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="Mode.h" />
     <ClInclude Include="Mouse.h" />

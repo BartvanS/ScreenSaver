@@ -1,5 +1,5 @@
 #include "Direction.h"
-void Direction::Init(int screenWidth, int screenHeight, int stepX, int stepY, int objectWidth, int objectHeight)
+void Direction::Init(int screenWidth, int screenHeight, int stepX, int stepY, POINT startPoint, int objectWidth, int objectHeight)
 {
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
@@ -7,8 +7,7 @@ void Direction::Init(int screenWidth, int screenHeight, int stepX, int stepY, in
 	this->stepY = stepY;
 	this->objectWidth = objectWidth;
 	this->objectHeight = objectHeight;
-	this->point.x = 0;
-	this->point.y = 0;
+	this->point = startPoint;
 }
 
 POINT Direction::NextPoint()

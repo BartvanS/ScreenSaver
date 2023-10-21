@@ -18,20 +18,24 @@ static HBITMAP hBitmap = NULL;
 static HDC hdcMem = NULL;
 int screenWidth;
 int screenHeight;
+
+
 Mouse mouse;
-Direction direction;
+Direction image;
 void Setup() {
 	GetScreenDimension(&screenWidth, &screenHeight);
+	// Set up mouse
 	mouse.Init(screenWidth, screenHeight, 1, 1);
-	//if (hBitmap == NULL) {
-	//	MessageBox(hwnd, L"Failed to load the bitmap image!", L"Error", MB_ICONERROR);
-	//	return -1; // Error
-	//}
+
+	// Set up image
 	hdcMem = CreateCompatibleDC(NULL);
 	SelectObject(hdcMem, hBitmap);
 	BITMAP bm;
 	GetObject(hBitmap, sizeof(BITMAP), &bm);
-	direction.Init(screenWidth, screenHeight, 1, 1, bm.bmWidth, bm.bmHeight);
+	POINT imageStartPoint;
+	imageStartPoint.x = 0;
+	imageStartPoint.y = 0;
+	image.Init(screenWidth, screenHeight, 1, 1, imageStartPoint, bm.bmWidth, bm.bmHeight);
 }
 
 int StartProcess() {
@@ -39,8 +43,8 @@ int StartProcess() {
 	if (hook.StartHook()) {
 		while (hook.IsExitLoop() == false) {
 			hook.CheckHook();
-			mouse.Next();
-			
+			//mouse.Next();
+
 			Sleep(1);
 		}
 	}
@@ -102,7 +106,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		// Paint bitmap
 		BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
 		EndPaint(hwnd, &ps);
-		
+
 		break;
 	}
 	case WM_CLOSE:
@@ -164,7 +168,7 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	{
 		return 0;
 	}
-	ShowWindow(hwnd, nCmdShow);	
+	ShowWindow(hwnd, nCmdShow);
 
 	MSG msg = { };
 	//while (GetMessage(&msg, NULL, 0, 0) > 0)
@@ -174,8 +178,9 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		Sleep(1);
-		POINT nextPoint = direction.NextPoint();
+		POINT nextPoint = image.NextPoint();
 		SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		mouse.Next();
 	}
 	return 0;
 }
