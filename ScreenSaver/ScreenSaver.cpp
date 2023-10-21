@@ -8,30 +8,40 @@
 #include "KeyboardHook.h"
 #include "resource.h"
 using namespace std;
+// Global variables
 // Keyboard hook
 HHOOK KeyboardHook::g_hHook = NULL;
 bool KeyboardHook::g_bExitLoop = false;
 KeyboardHook hook;
 
 
+// Instance of the program
+HINSTANCE* phInstance;
+
+// Setup global bitmap
 static HBITMAP hBitmap = NULL;
 static HDC hdcMem = NULL;
+BITMAP bm;
+void SetupBitmap() {
+	hBitmap = LoadBitmap(*phInstance, MAKEINTRESOURCE(IDB_BITMAP1)); // load bitmap into memory
+	hdcMem = CreateCompatibleDC(NULL); // do some memory magic
+	SelectObject(hdcMem, hBitmap); // more unknown memory magic
+	GetObject(hBitmap, sizeof(BITMAP), &bm); // set the BITMAP bm 
+
+}
+
 int screenWidth;
 int screenHeight;
-
-
 Mouse mouse;
 Direction image;
 void Setup() {
+	// Set screen dimensions
 	GetScreenDimension(&screenWidth, &screenHeight);
+	// Set up bitmap
+	SetupBitmap();
 	// Set up mouse
 	mouse.Init(screenWidth, screenHeight, 1, 1);
-
-	// Set up image
-	hdcMem = CreateCompatibleDC(NULL);
-	SelectObject(hdcMem, hBitmap);
-	BITMAP bm;
-	GetObject(hBitmap, sizeof(BITMAP), &bm);
+	//Set up image
 	POINT imageStartPoint;
 	imageStartPoint.x = 0;
 	imageStartPoint.y = 0;
@@ -39,7 +49,7 @@ void Setup() {
 }
 
 int StartProcess() {
-	// Move the screensaver untill the key is pressed and IsExitLoop has been triggered
+	// Move the screensaver untill IsExitLoop has been triggered
 	if (hook.StartHook()) {
 		while (hook.IsExitLoop() == false) {
 			hook.CheckHook();
@@ -146,9 +156,7 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	{
 		return -1;
 	}
-	// get bitmap image size
-	BITMAP bm;
-	GetObject(hBitmap, sizeof(BITMAP), &bm);
+
 	HWND hwnd = CreateWindowEx(
 		0,                              // Optional window styles.
 		CLASS_NAME,                     // Window class
@@ -189,7 +197,7 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	hBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_BITMAP1));
+	phInstance = &hInstance;
 	Setup();
 
 
