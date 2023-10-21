@@ -1,5 +1,4 @@
 // ScreenSaver.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #include <iostream>
 #include <windows.h>
 #include "Screen.h" 
@@ -7,13 +6,11 @@
 #include "Direction.h"
 #include "KeyboardHook.h"
 #include "resource.h"
-using namespace std;
 // Global variables
 // Keyboard hook
 HHOOK KeyboardHook::g_hHook = NULL;
 bool KeyboardHook::g_bExitLoop = false;
 KeyboardHook hook;
-
 
 // Instance of the program
 HINSTANCE* phInstance;
@@ -29,8 +26,10 @@ void SetupBitmap() {
 	GetObject(hBitmap, sizeof(BITMAP), &bm); // set the BITMAP bm 
 }
 
+// Screen dimensions
 int screenWidth;
 int screenHeight;
+// Mouse and image initialization
 Mouse mouse;
 Direction image;
 void Setup(HINSTANCE* hinstance) {
@@ -51,6 +50,7 @@ void Setup(HINSTANCE* hinstance) {
 
 void TearDown() {
 	// Clean up bitmap
+	hook.StopHook();
 	DeleteDC(hdcMem);
 	DeleteObject(hBitmap);
 }
@@ -59,9 +59,6 @@ void TearDown() {
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg)
 	{
-	case WM_CREATE:
-
-		break;
 	case WM_PAINT: {
 		// get bitmap image size
 		BITMAP bm;
@@ -71,35 +68,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
 
-		//// All painting occurs here, between BeginPaint and EndPaint.
-		//HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
-		//FillRect(hdc, &ps.rcPaint, brush);
-
 		// Paint bitmap
 		BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
 		EndPaint(hwnd, &ps);
 
 		break;
 	}
-	case WM_CLOSE:
-		//if (MessageBox(hwnd, L"Really quit?", L"My application", MB_OKCANCEL) == IDOK)
-		if (true) {
-			DestroyWindow(hwnd);
-			PostQuitMessage(0);
-		}
-		// Else: User canceled. Do nothing.
-		return 0;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	return 0;
 }
 
-int Window(int nCmdShow) {
+// Creates a window with its corresponding class and returns the handle to the window
+HWND Window(int nCmdShow) {
 	// Register the window class.
 	const wchar_t CLASS_NAME[] = L"Black background class";
 	WNDCLASS wc = { };
@@ -128,6 +110,16 @@ int Window(int nCmdShow) {
 	{
 		return 0;
 	}
+	return hwnd;
+}
+
+
+// WinMain instead of main to run the program as windows application instead of console application
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	int exitMessage = 0;
+	Setup(&hInstance);
+	HWND hwnd = Window(nCmdShow);
 	ShowWindow(hwnd, nCmdShow);
 
 	// Keep running untill IsExitLoop has been triggered
@@ -147,26 +139,15 @@ int Window(int nCmdShow) {
 			SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 			// Move mouse
 			mouse.Next();
-			Sleep(1);
 		}
 	}
 	else {
 		std::cerr << "Failed to set hook!" << std::endl;
-		hook.StopHook();
-		return -1;
+		exitMessage = -1;
 	}
-	hook.StopHook();
-	return 0;
-}
 
-
-// WinMain instead of main to run the program as windows application instead of console application
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-	Setup(&hInstance);
-	int success =  Window( nCmdShow);
 	TearDown();
-	return success;
+	return exitMessage;
 }
 
 
