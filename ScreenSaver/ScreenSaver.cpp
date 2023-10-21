@@ -27,14 +27,15 @@ void SetupBitmap() {
 	hdcMem = CreateCompatibleDC(NULL); // do some memory magic
 	SelectObject(hdcMem, hBitmap); // more unknown memory magic
 	GetObject(hBitmap, sizeof(BITMAP), &bm); // set the BITMAP bm 
-
 }
 
 int screenWidth;
 int screenHeight;
 Mouse mouse;
 Direction image;
-void Setup() {
+void Setup(HINSTANCE* hinstance) {
+	// set the hInstance to the global pointer
+	phInstance = hinstance;
 	// Set screen dimensions
 	GetScreenDimension(&screenWidth, &screenHeight);
 	// Set up bitmap
@@ -48,30 +49,8 @@ void Setup() {
 	image.Init(screenWidth, screenHeight, 1, 1, imageStartPoint, bm.bmWidth, bm.bmHeight);
 }
 
-int StartProcess() {
-	// Move the screensaver untill IsExitLoop has been triggered
-	if (hook.StartHook()) {
-		while (hook.IsExitLoop() == false) {
-			hook.CheckHook();
-			//mouse.Next();
-
-			Sleep(1);
-		}
-	}
-	else {
-		std::cerr << "Failed to set hook!" << std::endl;
-		hook.StopHook();
-		return 1;
-	}
-
-	hook.StopHook();
-	return 0;
-}
-
 struct StateInfo
 {
-	int x = 0;
-	int y = 0;
 };
 
 inline StateInfo* GetAppState(HWND hwnd)
@@ -139,13 +118,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	return 0;
 }
 
-int Window(HINSTANCE hInstance, int nCmdShow) {
+int Window(int nCmdShow) {
 	const wchar_t CLASS_NAME[] = L"Black background class";
 
 	WNDCLASS wc = { };
 
 	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
+	wc.hInstance = *phInstance;
 	wc.lpszClassName = CLASS_NAME;
 
 	RegisterClass(&wc);
@@ -156,7 +135,7 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	{
 		return -1;
 	}
-
+	// Create and show Window
 	HWND hwnd = CreateWindowEx(
 		0,                              // Optional window styles.
 		CLASS_NAME,                     // Window class
@@ -168,7 +147,7 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 
 		NULL,       // Parent window    
 		NULL,       // Menu
-		hInstance,  // Instance handle
+		*phInstance,  // Instance handle
 		pState        // Additional application data
 	);
 
@@ -178,18 +157,34 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	}
 	ShowWindow(hwnd, nCmdShow);
 
+
+	// Keep running untill IsExitLoop has been triggered
 	MSG msg = { };
-	//while (GetMessage(&msg, NULL, 0, 0) > 0)
-	while (true)
-	{
-		PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE);
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		Sleep(1);
-		POINT nextPoint = image.NextPoint();
-		SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-		mouse.Next();
+	if (hook.StartHook()) {
+		while (hook.IsExitLoop() == false) {
+			hook.CheckHook();
+			// Check if the system has any messages for this window
+			if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+				// Translate the message and dispatch it to WindowProc()
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			Sleep(1);
+			// Get next point for the image
+			POINT nextPoint = image.NextPoint();
+			SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+			// Move mouse
+			mouse.Next();
+			Sleep(1);
+		}
 	}
+	else {
+		std::cerr << "Failed to set hook!" << std::endl;
+		hook.StopHook();
+		return 1;
+	}
+
+	hook.StopHook();
 	return 0;
 }
 
@@ -197,14 +192,12 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	phInstance = &hInstance;
-	Setup();
+	
+	Setup(&hInstance);
 
 
-	int success = Window(hInstance, nCmdShow);
+	return Window( nCmdShow);
 
-	// Start the processes. When stopped it returns the exit code
-	//return StartProcess();
 }
 
 
