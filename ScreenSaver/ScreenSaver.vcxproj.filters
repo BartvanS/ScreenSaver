@@ -39,11 +39,11 @@
     <ClCompile Include="KeyboardHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BaseWindow.cpp">
-      <Filter>Source Files\WindowManager</Filter>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files\WindowManager</Filter>
+    <ClCompile Include="Direction.cpp">
+      <Filter>Source Files\Modes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,10 +65,10 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseWindow.h">
+    <ClInclude Include="WindowManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
+    <ClInclude Include="Direction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,7 @@
 #include <windows.h>
 #include "Screen.h" 
 #include "Mouse.h"
-#include "Image.h"
+#include "Direction.h"
 #include "KeyboardHook.h"
 #include "resource.h"
 using namespace std;
@@ -13,13 +13,25 @@ HHOOK KeyboardHook::g_hHook = NULL;
 bool KeyboardHook::g_bExitLoop = false;
 KeyboardHook hook;
 
+
+static HBITMAP hBitmap = NULL;
+static HDC hdcMem = NULL;
 int screenWidth;
 int screenHeight;
 Mouse mouse;
+Direction direction;
 void Setup() {
 	GetScreenDimension(&screenWidth, &screenHeight);
 	mouse.Init(screenWidth, screenHeight, 1, 1);
-	//Image image(screenWidth, screenHeight, 1, 1, "./dvd-image.png");
+	//if (hBitmap == NULL) {
+	//	MessageBox(hwnd, L"Failed to load the bitmap image!", L"Error", MB_ICONERROR);
+	//	return -1; // Error
+	//}
+	hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, hBitmap);
+	BITMAP bm;
+	GetObject(hBitmap, sizeof(BITMAP), &bm);
+	direction.Init(screenWidth, screenHeight, 1, 1, bm.bmWidth, bm.bmHeight);
 }
 
 int StartProcess() {
@@ -28,7 +40,7 @@ int StartProcess() {
 		while (hook.IsExitLoop() == false) {
 			hook.CheckHook();
 			mouse.Next();
-			//image.Next();
+			
 			Sleep(1);
 		}
 	}
@@ -55,8 +67,7 @@ inline StateInfo* GetAppState(HWND hwnd)
 	return pState;
 }
 
-static HBITMAP hBitmap = NULL;
-static HDC hdcMem = NULL;
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	StateInfo* pState;
 	if (uMsg == WM_CREATE)
@@ -73,12 +84,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		if (hBitmap == NULL) {
-			MessageBox(hwnd, L"Failed to load the bitmap image!", L"Error", MB_ICONERROR);
-			return -1; // Error
-		}
-		hdcMem = CreateCompatibleDC(NULL);
-		SelectObject(hdcMem, hBitmap);
+
 		break;
 	case WM_PAINT: {
 		// get bitmap image size
@@ -96,7 +102,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		// Paint bitmap
 		BitBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
 		EndPaint(hwnd, &ps);
-			SetWindowPos(hwnd, NULL, pState->x, pState->y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 		
 		break;
 	}
@@ -120,10 +125,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	return 0;
 }
 
-
-
-
-#define WM_LBUTTONDOWN    0x0201
 int Window(HINSTANCE hInstance, int nCmdShow) {
 	const wchar_t CLASS_NAME[] = L"Black background class";
 
@@ -163,20 +164,18 @@ int Window(HINSTANCE hInstance, int nCmdShow) {
 	{
 		return 0;
 	}
-	ShowWindow(hwnd, nCmdShow);
-
-
-	
+	ShowWindow(hwnd, nCmdShow);	
 
 	MSG msg = { };
+	//while (GetMessage(&msg, NULL, 0, 0) > 0)
 	while (true)
-	{ 
-		GetMessage(&msg, NULL, 0, 0);
+	{
+		PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE);
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-		pState->x = pState->x + 1;
 		Sleep(1);
-		InvalidateRect(hwnd, NULL, TRUE);  // Invalidate the entire client area
+		POINT nextPoint = direction.NextPoint();
+		SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	}
 	return 0;
 }
