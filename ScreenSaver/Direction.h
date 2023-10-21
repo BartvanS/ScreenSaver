@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
-class Direction
+#include "Mode.h"
+class Direction: Mode
 {
 private:
 	int screenWidth;
