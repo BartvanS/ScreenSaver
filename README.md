@@ -12,3 +12,4 @@ You can run the executable or run it from the terminal to have more options.
 ## ToDo
 - Code cleanup with more classes
 - Multiple screen support
+- System tray item
