@@ -36,11 +36,11 @@
     <ClCompile Include="KeyboardHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Direction.cpp">
       <Filter>Source Files\Modes</Filter>
+    </ClCompile>
+    <ClCompile Include="Cursor.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,10 +59,10 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowManager.h">
+    <ClInclude Include="Direction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Direction.h">
+    <ClInclude Include="Cursor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -75,5 +75,10 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\dvd-image.cur">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

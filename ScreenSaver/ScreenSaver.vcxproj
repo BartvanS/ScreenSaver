@@ -200,6 +200,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Direction.cpp" />
     <ClCompile Include="KeyboardHook.cpp" />
     <ClCompile Include="Mode.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="ScreenSaver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="Mode.h" />
@@ -220,6 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\dvd-image.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,7 @@
 #include "Direction.h"
 #include "KeyboardHook.h"
 #include "resource.h"
+#include "Cursor.h"
 // Global variables
 // Keyboard hook
 HHOOK KeyboardHook::g_hHook = NULL;
@@ -53,6 +54,8 @@ void TearDown() {
 	hook.StopHook();
 	DeleteDC(hdcMem);
 	DeleteObject(hBitmap);
+	// Restore the mouse cursor to normal
+	SystemParametersInfo(SPI_SETCURSORS, 0, NULL, SPIF_SENDCHANGE);
 }
 
 
@@ -113,15 +116,63 @@ HWND Window(int nCmdShow) {
 	return hwnd;
 }
 
+#include <iostream>
+#include <string>
+#include <vector>
+
+std::vector<std::wstring> ExtractWordsFromCmdLine(LPSTR lpCmdLine) {
+	std::vector<std::wstring> words;
+	std::wstring currentWord;
+	bool inWord = false;
+	for (int i = 0; lpCmdLine[i] != L'\0'; i++) {
+		if (lpCmdLine[i] == L' ' || lpCmdLine[i] == L'\t') {
+			if (inWord) {
+				words.push_back(currentWord);
+				currentWord.clear();
+				inWord = false;
+			}
+		}
+		else {
+			currentWord += lpCmdLine[i];
+			inWord = true;
+		}
+	}
+	if (inWord) {
+		words.push_back(currentWord);
+	}
+	return words;
+}
 
 // WinMain instead of main to run the program as windows application instead of console application
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	int exitMessage = 0;
 	Setup(&hInstance);
+	int exitMessage = 0;
+	bool enableMouse = true;
+	bool enableImage = true;
+	if (lpCmdLine[0] == L'm')
+	{
+		enableImage = false;
+	}
+	if (lpCmdLine[0] == L'i')
+	{
+		enableMouse = false;
+	}
+	//create window
 	HWND hwnd = Window(nCmdShow);
-	ShowWindow(hwnd, nCmdShow);
-
+	if (enableImage) {
+		ShowWindow(hwnd, nCmdShow);
+	}
+	if (enableMouse) {
+		HICON hCurs = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+		if (hCurs != NULL) {
+			ChangeCursorForAllSituations(hCurs);
+			ShowCursor(true);
+		}
+		else {
+			return -1;
+		}
+	}
 	// Keep running untill IsExitLoop has been triggered
 	MSG msg = { };
 	if (hook.StartHook()) {
@@ -135,10 +186,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			Sleep(1);
 			// Get next point for the image
-			POINT nextPoint = image.NextPoint();
-			SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+			if (enableImage)
+			{
+				POINT nextPoint = image.NextPoint();
+				SetWindowPos(hwnd, NULL, nextPoint.x, nextPoint.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+			}
 			// Move mouse
-			mouse.Next();
+			if (enableMouse)
+			{
+				mouse.Next();
+			}
 		}
 	}
 	else {
