@@ -212,6 +212,7 @@
   <ItemGroup>
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="Direction.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="KeyboardHook.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mode.h" />

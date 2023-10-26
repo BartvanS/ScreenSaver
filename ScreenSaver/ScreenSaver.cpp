@@ -8,25 +8,7 @@
 #include "resource.h"
 #include "Cursor.h"
 #include "MainWindow.h"
-// Global variables
-// Keyboard hook
-HHOOK KeyboardHook::g_hHook = NULL;
-bool KeyboardHook::g_bExitLoop = false;
-KeyboardHook hook;
-
-// Instance of the program
-HINSTANCE* phInstance;
-
-
-
-
-// Screen dimensions
-int screenWidth;
-int screenHeight;
-// Mouse and image initialization
-Mouse mouse;
-Direction image;
-MainWindow window;
+#include "Globals.h"
 void Setup(HINSTANCE* hinstance) {
 	// set the hInstance to the global pointer
 	phInstance = hinstance;
@@ -45,7 +27,6 @@ void Setup(HINSTANCE* hinstance) {
 void TearDown() {
 	// Clean up bitmap
 	hook.StopHook();
-
 	// Restore the mouse cursor to normal
 	SystemParametersInfo(SPI_SETCURSORS, 0, NULL, SPIF_SENDCHANGE);
 }
@@ -75,6 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (hCurs != NULL) {
 			ChangeCursorForAllSituations(hCurs);
 			ShowCursor(true);
+			DestroyIcon(hCurs);
 		}
 		else {
 			return -1;

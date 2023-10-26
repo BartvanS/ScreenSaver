@@ -15,6 +15,6 @@ You can run the executable or run it from the terminal to have more options. Pre
 .\ScreenSaver.exe i <-- only displays the image
 ```
 ## ToDo
-- Code cleanup with more classes
 - Multiple screen support
 - System tray item
+- ~~Potential memory leak~~
