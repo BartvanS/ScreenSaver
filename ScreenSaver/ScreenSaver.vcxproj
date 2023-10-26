@@ -203,6 +203,7 @@
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Direction.cpp" />
     <ClCompile Include="KeyboardHook.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Mode.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Screen.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="KeyboardHook.h" />
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mode.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="resource.h" />
