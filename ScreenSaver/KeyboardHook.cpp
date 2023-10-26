@@ -26,7 +26,6 @@
  }
 
  // Public getter method for g_bExitLoop
-
  bool KeyboardHook::IsExitLoop() const {
 	 return g_bExitLoop;
  }
@@ -38,7 +37,6 @@
 			 KBDLLHOOKSTRUCT* pKeyStruct = (KBDLLHOOKSTRUCT*)lParam;
 
 			 // Check if the key combination you want to hook is pressed
-			 //if (pKeyStruct->vkCode == VK_F1 && GetAsyncKeyState(VK_CONTROL) & 0x8000) {
 				 if (pKeyStruct->vkCode == VK_ESCAPE) {
 				 // Set the flag to exit the loop
 				 g_bExitLoop = true;
